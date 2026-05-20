@@ -88,6 +88,10 @@ class AssociationsSeeder extends BaseSeeder
         $this->_clean();
         $this->_reset_names();
 
+        // Load ULID helper for hash generation
+        $CI = get_instance();
+        $CI->load->helper('apps/ulid');
+
         $r         = $this->db->get_where(db_prefix() . 'roles', ['name' => 'Association Admin'])->row();
         $rid_admin = $r ? (int) $r->roleid : 0;
         $r         = $this->db->get_where(db_prefix() . 'roles', ['name' => 'Association'])->row();
@@ -115,6 +119,7 @@ class AssociationsSeeder extends BaseSeeder
                 'zip'         => $zip,
                 'country'     => $this->country,
                 'client_type' => 'association',
+                'hash'        => ulid(),
                 'active'      => 1,
                 'addedfrom'   => $staffid,
                 'datecreated' => $this->now,
@@ -127,6 +132,7 @@ class AssociationsSeeder extends BaseSeeder
                 'lastname'            => $staff_ln,
                 'password'            => app_hash_password('Demo1234!'),
                 'role'                => $rid_admin,
+                'hash'                => ulid(),
                 'active'              => 1,
                 'is_not_staff'        => 1,
                 'is_entity_owner'     => 1,
@@ -183,6 +189,7 @@ class AssociationsSeeder extends BaseSeeder
             'phonenumber'         => $phone,
             'password'            => app_hash_password('Demo1234!'),
             'role'                => $role_id,
+            'hash'                => ulid(),
             'active'              => 1,
             'is_not_staff'        => 1,
             'is_entity_owner'     => 0,
