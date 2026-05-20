@@ -1,0 +1,8 @@
+/* Associations Module CSS */
+
+/* Hide financial columns injected by core add_item_to_table — association has no calculations */
+.accounting-template.association table.items td.rate,
+.accounting-template.association table.items td.taxrate,
+.accounting-template.association table.items td.amount {
+    display: none;
+}
