@@ -10,7 +10,7 @@ require_once(__DIR__ . '/install/association_activity.php');
 require_once(__DIR__ . '/install/association_permits.php');
 require_once(__DIR__ . '/install/surveyors_associations.php');
 
-require_once __DIR__ . '/helpers/email_templates_helper.php';
+require_once __DIR__ . '/helpers/associations_email_templates_helper.php';
 associations_register_email_templates();
 
 // Add module options

@@ -212,30 +212,6 @@
                     </div>
                 </div><!-- /row billing+shipping -->
 
-                <?php if (isset($client)
-                    && (total_rows(db_prefix() . 'invoices', ['client_id' => $client->userid]) > 0
-                        || total_rows(db_prefix() . 'estimates', ['client_id' => $client->userid]) > 0
-                        || total_rows(db_prefix() . 'creditnotes', ['client_id' => $client->userid]) > 0)) { ?>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="tw-bg-neutral-50 tw-py-3 tw-px-4 tw-rounded-lg tw-border tw-border-solid tw-border-neutral-200">
-                            <div class="checkbox checkbox-primary -tw-mb-0.5">
-                                <input type="checkbox" name="update_all_other_transactions" id="update_all_other_transactions">
-                                <label for="update_all_other_transactions">
-                                    <?= _l('association_update_address_info_on_invoices'); ?>
-                                </label>
-                            </div>
-                            <p class="tw-ml-7 tw-mb-0"><?= _l('association_update_address_info_on_invoices_help'); ?></p>
-                            <div class="checkbox checkbox-primary">
-                                <input type="checkbox" name="update_credit_notes" id="update_credit_notes">
-                                <label for="update_credit_notes">
-                                    <?= _l('association_profile_update_credit_notes'); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php } ?>
 
             </div><!-- /tab-billing -->
 
