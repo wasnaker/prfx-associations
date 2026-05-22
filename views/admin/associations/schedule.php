@@ -24,7 +24,7 @@
                             echo '</div>';
                         }
 $selected = [];
-$contacts = $this->clients_model->get_contacts($association->clientid, ['active' => 1, 'association_emails' => 1]);
+$contacts = $this->clients_model->get_contacts($association->client_id, ['active' => 1, 'association_emails' => 1]);
 
 if (! isset($schedule)) {
     foreach ($contacts as $contact) {

@@ -782,7 +782,7 @@ function associations_global_search_result_query($result, $q, $limit)
 
         $CI->db->select()
             ->from(db_prefix() . 'associations')
-            ->join(db_prefix() . 'clients', db_prefix() . 'associations.clientid=' . db_prefix() . 'clients.userid', 'left')
+            ->join(db_prefix() . 'clients', db_prefix() . 'associations.client_id=' . db_prefix() . 'clients.userid', 'left')
             ->like(db_prefix() . 'clients.company', $q)
             ->or_like(db_prefix() . 'associations.formatted_number', $q)
             ->order_by(db_prefix() . 'clients.company', 'ASC')

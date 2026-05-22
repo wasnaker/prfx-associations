@@ -21,7 +21,7 @@ if ($association['status'] == $status) { ?>
                     <?php } ?>
                 </h4>
                 <span class="tw-inline-block tw-w-full tw-mb-2">
-                    <a href="<?= admin_url('clients/client/' . $association['clientid']); ?>"
+                    <a href="<?= admin_url('clients/client/' . $association['client_id']); ?>"
                         target="_blank">
                         <?= e($association['company']); ?>
                     </a>

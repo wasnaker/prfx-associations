@@ -278,7 +278,7 @@ class Associations extends AdminController
         if ($this->input->get('association_id')) {
             $data['association_id'] = $this->input->get('association_id');
         } elseif (!isset($data['association'])) {
-            // Auto-fill clientid from logged-in association staff
+            // Auto-fill client_id from logged-in association staff
             $logged = $this->db->get_where(db_prefix() . 'staff', ['staffid' => get_staff_user_id()])->row();
             if ($logged && !empty($logged->client_id)) {
                 $data['association_id'] = (int) $logged->client_id;

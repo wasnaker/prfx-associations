@@ -213,9 +213,9 @@
                 </div><!-- /row billing+shipping -->
 
                 <?php if (isset($client)
-                    && (total_rows(db_prefix() . 'invoices', ['clientid' => $client->userid]) > 0
-                        || total_rows(db_prefix() . 'estimates', ['clientid' => $client->userid]) > 0
-                        || total_rows(db_prefix() . 'creditnotes', ['clientid' => $client->userid]) > 0)) { ?>
+                    && (total_rows(db_prefix() . 'invoices', ['client_id' => $client->userid]) > 0
+                        || total_rows(db_prefix() . 'estimates', ['client_id' => $client->userid]) > 0
+                        || total_rows(db_prefix() . 'creditnotes', ['client_id' => $client->userid]) > 0)) { ?>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="tw-bg-neutral-50 tw-py-3 tw-px-4 tw-rounded-lg tw-border tw-border-solid tw-border-neutral-200">

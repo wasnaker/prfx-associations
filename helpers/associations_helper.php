@@ -51,7 +51,7 @@ function get_association_shortlink($association)
 }
 
 /**
- * Check association restrictions - hash, clientid
+ * Check association restrictions - hash, client_id
  * @param  mixed $id   association id
  * @param  string $hash association hash
  */
@@ -75,7 +75,7 @@ function check_association_restrictions($id, $hash)
     // Do one more check
     if (!is_staff_logged_in()) {
         if (get_option('view_association_only_logged_in') == 1) {
-            if ($association->clientid != get_client_user_id()) {
+            if ($association->client_id != get_client_user_id()) {
                 show_404();
             }
         }
