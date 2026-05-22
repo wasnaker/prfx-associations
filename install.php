@@ -2,6 +2,13 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+// association main table removed — actors use tblclients (client_type='association')
+require_once(__DIR__ . '/install/association_equipment.php');
+require_once(__DIR__ . '/install/association_doc_equipment.php');
+require_once(__DIR__ . '/install/association_items.php');
+require_once(__DIR__ . '/install/association_activity.php');
+require_once(__DIR__ . '/install/association_permits.php');
+require_once(__DIR__ . '/install/surveyors_associations.php');
 
 require_once __DIR__ . '/helpers/email_templates_helper.php';
 associations_register_email_templates();
