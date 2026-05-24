@@ -21,7 +21,7 @@ if (!staff_can('view', 'associations') && !staff_can('view_own', 'associations')
 
 **Commit:** 39ff3b7
 
-**Related:** /public_html/module_helper_audit.md (documentation for all 12 modules)
+**Related:** /public_html/audit_relation_helper.md (documentation for all 12 modules)
 
 ---
 
