@@ -124,7 +124,7 @@ function associations_init_relation_options($data)
     $type = $CI->input->post('type');
 
     if ($type === 'association_surveyor' || $type === 'association_equipment') {
-        if (!has_permission('associations', '', 'view')) {
+        if (!staff_can('view', 'associations') && !staff_can('view_own', 'associations')) {
             return [];
         }
         return $data;
