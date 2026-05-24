@@ -259,7 +259,27 @@ function associations_register_app_table()
     App_table::register(App_table::new('association_surveyor_permits',       $base . 'surveyor_permits'));
 }
 
-// ─── Dashboard Widget ─────────────────────────────────────────────────────────
+// ─── Entity Helper Functions ──────────────────────────────────────────────────
+
+function _associations_is_association_entity_user()
+{
+    $me = get_staff(get_staff_user_id());
+    return $me && $me->client_type === 'association' && !empty($me->client_id);
+}
+
+function _associations_get_connected_surveyor_ids(int $association_id): array
+{
+    $CI   = &get_instance();
+    $rows = $CI->db->query("
+        SELECT surveyor_id
+        FROM " . db_prefix() . "surveyors_associations
+        WHERE association_id = {$association_id}
+          AND status = 'active'
+    ")->result_array();
+    return array_column($rows, 'surveyor_id');
+}
+
+// ─── Menu & Preview Items ────────────────────────────────────────────────────
 
 function associations_surveyor_more_menu_items($surveyor)
 {

@@ -17,26 +17,6 @@ hooks()->add_filter('can_view_personnel_permit',          'associations_can_view
 hooks()->add_filter('surveyors_permits_datatable_where',  'associations_filter_surveyor_permits_by_connection', 10, 2);
 hooks()->add_filter('can_view_surveyor_permit',           'associations_can_view_surveyor_permit', 10, 2);
 
-// ─── Helper Functions ──────────────────────────────────────────────────────────
-
-function _associations_is_association_entity_user()
-{
-    $me = get_staff(get_staff_user_id());
-    return $me && $me->client_type === 'association' && !empty($me->client_id);
-}
-
-function _associations_get_connected_surveyor_ids(int $association_id): array
-{
-    $CI  = &get_instance();
-    $rows = $CI->db->query("
-        SELECT surveyor_id
-        FROM " . db_prefix() . "surveyors_associations
-        WHERE association_id = {$association_id}
-          AND status = 'active'
-    ")->result_array();
-    return array_column($rows, 'surveyor_id');
-}
-
 // ─── Surveyor Datatable Hooks ──────────────────────────────────────────────────
 
 function associations_filter_surveyors_datatable_where($where)
