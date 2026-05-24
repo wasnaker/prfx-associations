@@ -4,6 +4,8 @@
 
 ### DataTable Hooks Consolidation (2026-05-24)
 
+### DataTable Hooks Consolidation (2026-05-24)
+
 **File:** `helpers/associations_datatables_helper.php` (created)
 
 **Change:** Consolidated all cross-module datatable filtering hooks into dedicated helper file.

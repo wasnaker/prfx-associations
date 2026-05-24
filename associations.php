@@ -55,9 +55,12 @@ define('ASSOCIATION_STATUS_DECLINED', 3);
 define('ASSOCIATION_STATUS_ACCEPTED', 4);
 define('ASSOCIATION_STATUS_EXPIRED',  5);
 
+// ─── Menu Helpers ──────────────────────────────────────────────────────────────
+
+require_once(__DIR__ . '/helpers/associations_menu_helper.php');
+
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
-hooks()->add_action('admin_init',                    'associations_module_init_menu_items');
 hooks()->add_action('after_email_templates',         'associations_email_templates_section');
 hooks()->add_action('admin_init',                    'associations_settings_tab');
 hooks()->add_action('admin_init',                    'associations_register_app_table');
@@ -125,102 +128,6 @@ require_once(__DIR__ . '/helpers/associations_capability_helpers.php');
 require_once(__DIR__ . '/helpers/associations_datatables_helper.php');
 
 // ─── Menu ─────────────────────────────────────────────────────────────────────
-
-function associations_module_init_menu_items()
-{
-    $CI = &get_instance();
-
-    $CI->app->add_quick_actions_link([
-        'name'       => _l('associations'),
-        'url'        => 'associations',
-        'permission' => 'associations',
-        'icon'       => 'fa-solid fa-file-invoice',
-        'position'   => 11,
-    ]);
-
-    if (staff_can('view', 'associations') || staff_can('view_own', 'associations')) {
-        $CI->app_menu->add_sidebar_children_item('wasnaker-member', [
-            'slug'     => 'associations-tracking',
-            'name'     => _l('associations'),
-            'href'     => admin_url('associations'),
-            'position' => 5,
-        ]);
-    }
-
-    // Surveyor Permits approval — admin atau association staff
-    $_me_sp = get_staff(get_staff_user_id());
-    $_ct_sp = $_me_sp->client_type ?? '';
-    if (is_admin() || $_ct_sp === 'association') {
-        $pending_permits = 0;
-        if ($CI->db->table_exists(db_prefix() . 'surveyor_permits')) {
-            $pending_permits = $CI->db
-                ->where('status', 'pending')
-                ->count_all_results(db_prefix() . 'surveyor_permits');
-        }
-
-        $CI->app_menu->add_sidebar_children_item('wasnaker-transaction', [
-            'slug'     => 'surveyor-permits-approval',
-            'name'     => _l('assoc_surveyor_permits'),
-            'href'     => admin_url('associations/list_surveyor_permits'),
-            'position' => 12,
-            'badge'    => $pending_permits > 0 ? ['count' => $pending_permits, 'bg' => 'warning'] : [],
-        ]);
-    }
-
-    $_me_menu = get_staff(get_staff_user_id());
-    if ($_me_menu && $_me_menu->client_type === 'surveyor' && !empty($_me_menu->client_id)) {
-        $CI->app_menu->add_sidebar_children_item('wasnaker-member', [
-            'slug'     => 'my-associations',
-            'name'     => _l('my_associations'),
-            'href'     => admin_url('associations/my_associations'),
-            'position' => 6,
-        ]);
-    }
-
-    if (has_permission('associations', '', 'view')) {
-        $CI->app_menu->add_sidebar_children_item('reports', [
-            'slug'     => 'associations-report',
-            'name'     => _l('associations_report'),
-            'href'     => admin_url('associations/associations_report'),
-            'position' => 35,
-        ]);
-    }
-
-    if (is_admin()) {
-        $pending_count = $CI->db
-            ->where('client_type', 'association')
-            ->where_in('registration_status', ['pending', 'user_activated'])
-            ->count_all_results(db_prefix() . 'staff');
-
-        $CI->app_menu->add_sidebar_children_item('wasnaker-registration', [
-            'slug'     => 'associations-pending-approvals',
-            'name'     => _l('associations'),
-            'href'     => admin_url('associations/pending_approvals'),
-            'position' => 1,
-            'badge'    => $pending_count > 0 ? ['count' => $pending_count, 'bg' => 'danger'] : [],
-        ]);
-    }
-
-    // Surveyor registration approval — admin, platform, atau association staff
-    $_me_reg = get_staff(get_staff_user_id());
-    $_ct_reg = $_me_reg->client_type ?? '';
-    if (is_admin() || is_platform() || $_ct_reg === 'association') {
-        $pending_reg = 0;
-        if ($CI->db->table_exists(db_prefix() . 'surveyors_associations')) {
-            $pending_reg = $CI->db
-                ->where('status', 'pending')
-                ->count_all_results(db_prefix() . 'surveyors_associations');
-        }
-
-        $CI->app_menu->add_sidebar_children_item('wasnaker-registration', [
-            'slug'     => 'surveyor-registrations',
-            'name'     => _l('association_surveyor_registrations_tab'),
-            'href'     => admin_url('associations/list_surveyor_registrations'),
-            'position' => 5,
-            'badge'    => $pending_reg > 0 ? ['count' => $pending_reg, 'bg' => 'warning'] : [],
-        ]);
-    }
-}
 
 // ─── Relation Data Hooks ─────────────────────────────────────────────────────
 
