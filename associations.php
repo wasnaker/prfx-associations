@@ -61,7 +61,6 @@ require_once(__DIR__ . '/helpers/associations_menu_helper.php');
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
-hooks()->add_action('after_email_templates',         'associations_email_templates_section');
 hooks()->add_action('admin_init',                    'associations_settings_tab');
 hooks()->add_action('admin_init',                    'associations_register_app_table');
 hooks()->add_action('after_cron_run',                'associations_notification');
@@ -112,6 +111,10 @@ function associations_module_deactivation_hook()
 // ─── Language ─────────────────────────────────────────────────────────────────
 
 register_language_files(ASSOCIATIONS_MODULE_NAME, [ASSOCIATIONS_MODULE_NAME]);
+
+// ─── Email Templates Helper ─────────────────────────────────────────────────
+
+require_once(__DIR__ . '/helpers/associations_email_templates_helper.php');
 
 // ─── Relation Helpers ──────────────────────────────────────────────────────────
 
@@ -307,24 +310,6 @@ function associations_other_merge_fields_available_for($available_for)
 }
 
 // ─── Email Templates Section ──────────────────────────────────────────────────
-
-function associations_email_templates_section()
-{
-    $CI = &get_instance();
-
-    $module = $CI->app_modules->get(ASSOCIATIONS_MODULE_NAME);
-    if (!$module || (int) $module['activated'] !== 1) {
-        return;
-    }
-
-    $CI->load->model('emails_model');
-    $data['association_email_templates'] = $CI->emails_model->get([
-        'type'     => 'associations',
-        'language' => 'english',
-    ]);
-    $data['hasPermissionEdit'] = staff_can('edit', 'email_templates');
-    $CI->load->view('associations/admin/emails/association_email_templates', $data);
-}
 
 // ─── Cron Notification ────────────────────────────────────────────────────────
 
