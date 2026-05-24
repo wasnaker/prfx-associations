@@ -59,8 +59,6 @@ define('ASSOCIATION_STATUS_EXPIRED',  5);
 
 hooks()->add_action('admin_init',                    'associations_module_init_menu_items');
 hooks()->add_action('after_email_templates',         'associations_email_templates_section');
-hooks()->add_action('admin_init',                    'associations_permissions');
-hooks()->add_action('admin_init',                    'associations_ensure_role_permissions');
 hooks()->add_action('admin_init',                    'associations_settings_tab');
 hooks()->add_action('admin_init',                    'associations_register_app_table');
 hooks()->add_action('after_cron_run',                'associations_notification');
@@ -72,9 +70,6 @@ hooks()->add_filter('global_search_result_query',  'associations_global_search_r
 hooks()->add_filter('global_search_result_output', 'associations_global_search_result_output', 10, 2);
 hooks()->add_filter('get_dashboard_widgets',        'associations_add_dashboard_widget');
 hooks()->add_filter('module_associations_action_links', 'module_associations_action_links');
-hooks()->add_filter('get_contact_permissions',        'associations_add_contact_permission');
-hooks()->add_filter('staff_can', 'associations_staff_can_filter', 10, 4);
-hooks()->add_filter('staff_permissions', 'associations_add_staff_permissions', 10, 2);
 hooks()->add_action('app_admin_footer', 'associations_inactive_company_modal');
 hooks()->add_filter('surveyors_table_sql_where',          'associations_filter_surveyors_datatable_where');
 hooks()->add_filter('can_view_surveyor_profile',          'associations_can_view_surveyor_profile', 10, 2);
@@ -129,6 +124,10 @@ register_language_files(ASSOCIATIONS_MODULE_NAME, [ASSOCIATIONS_MODULE_NAME]);
 // ─── Relation Helpers ──────────────────────────────────────────────────────────
 
 require_once(__DIR__ . '/helpers/association_relation_helpers.php');
+
+// ─── Capability Helpers ───────────────────────────────────────────────────────
+
+require_once(__DIR__ . '/helpers/associations_capability_helpers.php');
 
 // ─── Menu ─────────────────────────────────────────────────────────────────────
 
@@ -231,117 +230,7 @@ function associations_module_init_menu_items()
 // ─── Relation Data Hooks ─────────────────────────────────────────────────────
 
 
-// ─── Permissions ──────────────────────────────────────────────────────────────
-
-function associations_permissions()
-{
-    $capabilities = [];
-    $capabilities['capabilities'] = [
-        'view'                          => _l('permission_view') . ' (' . _l('permission_global') . ')',
-        'view_own'                      => _l('permission_view_own'),
-        'create'                        => _l('permission_create'),
-        'edit'                          => _l('permission_edit'),
-        'delete'                        => _l('permission_delete'),
-        'mark_as'                       => _l('permission_mark_as'),
-        'register'                      => _l('permission_register'),
-        'approve_surveyor_registration' => _l('associations_approve_surveyor_registration'),
-        'approve_surveyor_permit'       => _l('associations_approve_surveyor_permit'),
-        'approve_personnel_permit'      => _l('associations_approve_personnel_permit'),
-    ];
-    register_staff_capabilities('associations', $capabilities, _l('associations'));
-}
-
-function associations_ensure_role_permissions()
-{
-    $CI = &get_instance();
-
-    $allowed = [
-        'Association'       => ['view_own'],
-        'Association Admin' => ['view', 'edit', 'create', 'delete', 'mark_as',
-                                'approve_surveyor_registration',
-                                'approve_surveyor_permit',
-                                'approve_personnel_permit'],
-        'Surveyor'          => ['view'],
-        'Surveyor Admin'        => ['view', 'register'],
-        'Surveyor Branch Admin' => ['view', 'register'],
-        'Customer Service'  => ['view'],
-        'IT Support'        => ['view'],
-    ];
-
-    $denied = [
-        'Association'       => ['view', 'edit', 'edit_own',
-                                'approve_surveyor_registration',
-                                'approve_surveyor_permit',
-                                'approve_personnel_permit'],
-        'Association Admin' => ['view_own', 'edit_own'],
-    ];
-
-    foreach ($allowed as $role_name => $caps) {
-        $role = $CI->db->get_where(db_prefix() . 'roles', ['name' => $role_name])->row();
-        if (!$role) { continue; }
-        $rid = (int) $role->roleid;
-        foreach ($caps as $cap) {
-            $key = 'association_' . $cap . '_role_' . $rid;
-            if (get_option($key) === '') { add_option($key, '1'); }
-        }
-    }
-
-    foreach ($denied as $role_name => $caps) {
-        $role = $CI->db->get_where(db_prefix() . 'roles', ['name' => $role_name])->row();
-        if (!$role) { continue; }
-        $rid = (int) $role->roleid;
-        foreach ($caps as $cap) {
-            $key = 'association_' . $cap . '_role_' . $rid;
-            if (get_option($key) === '') { add_option($key, '0'); }
-        }
-    }
-}
-
-function associations_staff_can_filter($result, $capability, $feature, $staff_id)
-{
-    if ($feature !== 'associations') { return $result; }
-    if ($result === true) { return true; }
-
-    $CI   = &get_instance();
-    $role = $CI->db->select('role')
-        ->get_where(db_prefix() . 'staff', ['staffid' => $staff_id])
-        ->row();
-
-    if (!$role || empty($role->role)) { return $result; }
-
-    $opt = get_option('association_' . $capability . '_role_' . (int) $role->role);
-    if ($opt !== '') { return $opt == '1'; }
-
-    return $result;
-}
-
-function associations_add_contact_permission($permissions)
-{
-    $permissions[] = [
-        'id'         => 7,
-        'name'       => _l('association_permission_association'),
-        'short_name' => 'associations',
-    ];
-    return $permissions;
-}
-
-function associations_add_staff_permissions($permissions, $data)
-{
-    $permissions['associations'] = [
-        'name'         => _l('associations'),
-        'capabilities' => [
-            'view'                          => _l('permission_view') . ' (' . _l('permission_global') . ')',
-            'view_own'                      => _l('permission_view_own'),
-            'create'                        => _l('permission_create'),
-            'edit'                          => _l('permission_edit'),
-            'mark_as'                       => _l('permission_mark_as'),
-            'approve_surveyor_registration' => _l('permission_approve_surveyor_registration'),
-            'approve_surveyor_permit'       => _l('permission_approve_surveyor_permit'),
-            'approve_personnel_permit'      => _l('permission_approve_personnel_permit'),
-        ],
-    ];
-    return $permissions;
-}
+// ─── Capabilities are consolidated in helpers/associations_capability_helpers.php ───
 
 // ─── Settings Tab ─────────────────────────────────────────────────────────────
 
