@@ -5,6 +5,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 hooks()->add_action('after_email_templates', 'associations_email_templates_section');
 
+// ─── Register Email Templates on Install ──────────────────────────────────────
+
+function associations_register_email_templates()
+{
+    $CI = &get_instance();
+    $CI->load->model('emails_model');
+
+    $templates = [
+        [
+            'slug'     => 'association-registered',
+            'name'     => 'Association Registered',
+            'subject'  => 'New Association Registration',
+            'message'  => '<p>Hi {staff_firstname},</p><p>A new association has registered.</p>',
+            'type'     => 'associations',
+            'language' => 'english',
+        ],
+    ];
+
+    foreach ($templates as $template) {
+        $exists = $CI->db->where('slug', $template['slug'])
+                         ->where('language', $template['language'])
+                         ->get(db_prefix() . 'emailtemplates')
+                         ->num_rows();
+        if ($exists === 0) {
+            $CI->db->insert(db_prefix() . 'emailtemplates', $template);
+        }
+    }
+}
+
 // ─── Email Templates Section ──────────────────────────────────────────────────
 
 function associations_email_templates_section()

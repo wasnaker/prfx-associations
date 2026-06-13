@@ -237,3 +237,5 @@ $lang['associations_approve_personnel_permit']         = 'Approve Personnel Perm
 $lang['mark_as_pending']                          = 'Mark as Pending';
 $lang['confirm_mark_as_pending_desc']    = 'This PJK3 will be moved back to pending registration and removed from active members.';
 $lang['surveyor_membership_set_pending'] = 'Membership set back to pending';
+
+$lang['permission_mark_as']  = 'Mark As';
