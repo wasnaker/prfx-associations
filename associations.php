@@ -111,6 +111,7 @@ function associations_module_deactivation_hook()
 // ─── Language ─────────────────────────────────────────────────────────────────
 
 register_language_files(ASSOCIATIONS_MODULE_NAME, [ASSOCIATIONS_MODULE_NAME]);
+$CI->lang->load('associations', 'english', false, true, module_dir_path('associations'));
 
 // ─── Email Templates Helper ─────────────────────────────────────────────────
 

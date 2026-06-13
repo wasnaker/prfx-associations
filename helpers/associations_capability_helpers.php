@@ -15,10 +15,6 @@ hooks()->add_filter('role_capabilities_features',    'associations_role_capabili
 
 function associations_permissions()
 {
-    // admin_init fires before after_load_admin_language — load explicitly so _l() keys resolve
-    $CI = &get_instance();
-    $CI->lang->load('associations/associations', 'english');
-
     $capabilities = [];
     $capabilities['capabilities'] = [
         'view'                          => _l('permission_view') . ' (' . _l('permission_global') . ')',
