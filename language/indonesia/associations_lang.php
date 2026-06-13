@@ -245,6 +245,9 @@ $lang['permission_create']                                           = 'Buat';
 $lang['permission_edit']                                             = 'Edit';
 $lang['permission_delete']                                           = 'Hapus';
 $lang['permission_global']                                           = 'Global';
+$lang['associations_approve_surveyor_registration']                  = 'Setujui Pendaftaran PJK3';
+$lang['associations_approve_surveyor_permit']                        = 'Setujui Izin PJK3';
+$lang['associations_approve_personnel_permit']                       = 'Setujui Izin Personil';
 
 $lang['my_associations']                      = 'Asosiasi Saya';
 $lang['permission_convert_to_quotation']      = 'Konversi ke Penawaran';
