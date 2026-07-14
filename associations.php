@@ -111,7 +111,7 @@ function associations_module_deactivation_hook()
 // ─── Language ─────────────────────────────────────────────────────────────────
 
 register_language_files(ASSOCIATIONS_MODULE_NAME, [ASSOCIATIONS_MODULE_NAME]);
-$CI->lang->load('associations', 'english', false, true, module_dir_path('associations'));
+get_instance()->lang->load('associations', 'english', false, true, module_dir_path('associations'));
 
 // ─── Email Templates Helper ─────────────────────────────────────────────────
 
@@ -384,7 +384,7 @@ function associations_inactive_company_modal()
     $filled  = count(array_filter(array_column($checks, 'ok')));
     $percent = (int) round(($filled / $total) * 100);
 
-    $restricted = ['rfqs', 'quotations', 'orders', 'programs', 'jobs',
+    $restricted = ['rfqs', 'quotations', 'orders', 'projects', 'tasks',
                    'associations/equipment', 'schedules', 'billings'];
 
     $edit_url  = admin_url('associations/association/' . (int) $me->client_id);
